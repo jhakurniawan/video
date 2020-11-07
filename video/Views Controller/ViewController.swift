@@ -24,6 +24,18 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         model.getMovie()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard tableView.indexPathForSelectedRow != nil else {
+            return
+        }
+        
+        let selectedMovie = movies[tableView.indexPathForSelectedRow!.row]
+        
+        let detailVC = segue.destination as! DetailViewController
+        
+        detailVC.movie = selectedMovie
+    }
+    
     func moviesFetched(_ movies: [Movie]) {
         self.movies = movies
         tableView.reloadData()
@@ -36,13 +48,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.VIDEOCELL_ID, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.VIDEOCELL_ID, for: indexPath) as! MovieTableViewCell
         
-        let title = self.movies[indexPath.row].title
+        let movie = self.movies[indexPath.row]
         
-        cell.textLabel?.text=title
+        cell.setCell(movie)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
     }
 
 }
